@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
 	return (
@@ -34,15 +35,22 @@ function Hero() {
 							className="ring-black ring-1 rounded px-4 py-2"
 						/>
 					</div>
-					<button className="mt-4 bg-primary text-white px-4 py-2 font-semibold rounded">
+
+					<Link
+						href="/service"
+						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+					>
 						Login
-					</button>
+					</Link>
 				</div>
 				<div className="flex justify-center items-center flex-col">
 					<p>Explore Our Services</p>
-					<button className="mt-4 bg-primary text-white px-4 py-2 font-semibold rounded w-full">
+					<Link
+						href="/service"
+						className="mt-4 bg-primary text-white text-center px-4 py-2 font-semibold rounded w-full"
+					>
 						Skip Login
-					</button>
+					</Link>
 				</div>
 			</div>
 		</div>
