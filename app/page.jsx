@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,11 +54,26 @@ function Services() {
 					<h1 className="text-3xl font-semibold text-primary">
 						Instant Service
 					</h1>
-					<img src="/card1.jpg" className="w-[400px]" />
+					{/* <img src="/card1.jpg"  /> */}
+					<div className="">
+						<iframe
+							width="320"
+							height="170"
+							src="https://www.youtube.com/embed/C9Ee82hF2l8?si=owIsyppQR3nZujgO"
+							title="YouTube video player"
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						></iframe>
+					</div>
 					<p>
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry standard dummy text ever
-						since the 1500s, when an unknown printer took a galley.
+						Instant Repair Service offers quick and reliable assistance for
+						sudden mechanical issues with cars. Available 24/7, it connects
+						customers with skilled technicians who can provide on-the-spot
+						repairs. The service includes transparent pricing and offers
+						recovery if needed. With this service, car owners can get back on
+						the road quickly and with minimal hassle.
 					</p>
 				</div>
 
@@ -65,11 +81,25 @@ function Services() {
 					<h1 className="text-3xl font-semibold text-primary">
 						Doorstep Service
 					</h1>
-					<img src="/card1.jpg" className="w-[400px]" />
+					<div>
+						<iframe
+							width="320"
+							height="170"
+							src="https://www.youtube.com/embed/gheAwVmNx7k?si=fYXxo7EflOdhg7df"
+							title="YouTube video player"
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						></iframe>
+					</div>
 					<p>
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry standard dummy text ever
-						since the 1500s, when an unknown printer took a galley.
+						Doorstep Service allows customers to schedule a mechanic visit at a
+						time and location of their choosing. Offering flexibility, the
+						service brings certified mechanics to the customer's home or
+						workplace. Transparent pricing ensures customers know costs upfront.
+						Dedicated support helps with scheduling and updates for a
+						hassle-free experience.
 					</p>
 				</div>
 			</div>

@@ -85,7 +85,7 @@ function DropdownMenu() {
 							href="#"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Dashboard
+							Option One
 						</a>
 					</li>
 					<li>
@@ -93,7 +93,7 @@ function DropdownMenu() {
 							href="#"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Settings
+							Option Two
 						</a>
 					</li>
 					<li>
@@ -101,15 +101,7 @@ function DropdownMenu() {
 							href="#"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Earnings
-						</a>
-					</li>
-					<li>
-						<a
-							href="#"
-							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							Sign out
+							Option Three
 						</a>
 					</li>
 				</ul>
