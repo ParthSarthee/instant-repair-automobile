@@ -9,6 +9,16 @@ import { useRouter } from "next/navigation";
 import { authStore } from "@/stores/authStore";
 import toast from "react-hot-toast";
 
+const cities = [
+	"Phagwara",
+	"Jalandhar",
+	"Amritsar",
+	"Ludhiana",
+	"Pathankot",
+	"Chandigarh",
+	"Patna",
+];
+
 export default function Home() {
 	return (
 		<>
@@ -135,21 +145,39 @@ function LoginCard() {
 						</div>
 
 						{userData.type == "mechanic" && (
-							<div>
-								<span>Skill: </span> <br />
-								<select
-									onChange={(e) =>
-										setUserData({ ...userData, skill: e.target.value })
-									}
-									value={userData.skill}
-									className="ring-black ring-1 rounded px-4 py-2 w-full"
-								>
-									<option value="two">Two Wheelers</option>
-									<option value="three">Three Wheelers</option>
-									<option value="four">Four Wheelers</option>
-									<option value="heavy">Heavy Vehicles</option>
-								</select>
-							</div>
+							<>
+								<div>
+									<span>Skill: </span> <br />
+									<select
+										onChange={(e) =>
+											setUserData({ ...userData, skill: e.target.value })
+										}
+										value={userData.skill}
+										className="ring-black ring-1 rounded px-4 py-2 w-full"
+									>
+										<option value="two">Two Wheelers</option>
+										<option value="three">Three Wheelers</option>
+										<option value="four">Four Wheelers</option>
+										<option value="heavy">Heavy Vehicles</option>
+									</select>
+								</div>
+								<div>
+									<span>Location: </span> <br />
+									<select
+										onChange={(e) =>
+											setUserData({ ...userData, location: e.target.value })
+										}
+										value={userData.location}
+										className="ring-black ring-1 rounded px-4 py-2 w-full"
+									>
+										{cities.map((city) => (
+											<option key={city} value={city}>
+												{city}
+											</option>
+										))}
+									</select>
+								</div>
+							</>
 						)}
 
 						<button

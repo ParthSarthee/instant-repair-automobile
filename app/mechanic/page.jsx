@@ -1,6 +1,6 @@
 import React from "react";
 
-function MechanicsPage() {
+function MechanicList() {
 	return (
 		<div className="py-8">
 			<div className="flex flex-col justify-center items-center p-8 gap-8">
@@ -42,4 +42,4 @@ function MechanicCard({ name, type, rating }) {
 	);
 }
 
-export default MechanicsPage;
+export default MechanicList;
