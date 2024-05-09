@@ -4,6 +4,7 @@ import crud from "@/plugins/crud";
 import { task } from "@/plugins/task";
 import toast from "react-hot-toast";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
 
 const cities = [
 	"Phagwara",
@@ -216,7 +217,7 @@ function ServiceForm({ serviceData, setServiceData }) {
 						}
 						value={serviceData.location}
 					>
-						<option selected></option>
+						<option value=""> Select Your City</option>
 						{cities.map((city) => (
 							<option key={city} value={city}>
 								{city}
@@ -307,6 +308,7 @@ function MechanicList({ serviceData, setServiceData }) {
 							location={mechanic.location}
 							rating={mechanic.rating}
 							serviceData={serviceData}
+							setServiceData={setServiceData}
 						/>
 					))}
 				</div>
@@ -315,8 +317,20 @@ function MechanicList({ serviceData, setServiceData }) {
 	);
 }
 
-function MechanicCard({ name, skill, location, rating, uid, serviceData }) {
-	function createServiceRequest() {
+function MechanicCard({
+	name,
+	skill,
+	location,
+	rating,
+	uid,
+	serviceData,
+	setServiceData,
+}) {
+	const router = useRouter();
+
+	async function createServiceRequest() {
+		const tempData = { ...serviceData, mechanic: uid };
+
 		//check if all the data is filles
 		if (!serviceData.service) {
 			toast.error("Please select your service type");
@@ -332,8 +346,14 @@ function MechanicCard({ name, skill, location, rating, uid, serviceData }) {
 		) {
 			toast.error("Please fill all the details");
 			document.getElementById("form").scrollIntoView({ behavior: "smooth" });
-		} else
-			toast.success("We have registered your service request successfully!");
+		} else {
+			// create a service request
+			const res = await crud.post("/service", null, tempData);
+			if (res.error) toast.error(res.msg);
+			else toast.success("Service Request Successfull!");
+			console.log(res);
+			router.push("/");
+		}
 		// disable all ui elements
 		//create a backend request
 		//enable all ui elements

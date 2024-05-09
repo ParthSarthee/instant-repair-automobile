@@ -14,7 +14,7 @@ function Navbar() {
 	}
 
 	return (
-		<div className="flex justify-between px-8 py-2 items-center bg-neutral-900 fixed top-0 w-full">
+		<div className="flex justify-between px-8 py-2 items-center bg-neutral-900 fixed top-0 w-full z-50">
 			<Link href="/" className="flex justify-center items-center gap-2">
 				<img src="/logo.png" width="50" height="16" className="rounded" />
 				<h1 className="text-primary text-4xl">IRA</h1>

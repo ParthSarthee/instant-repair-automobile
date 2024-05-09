@@ -1,7 +1,7 @@
 const { stringify } = require("querystring");
 import { task } from "./task";
-// const api = "http://localhost:6800";
-const api = "https://ira-server.onrender.com";
+const api = "http://localhost:6800";
+// const api = "https://ira-server.onrender.com";
 import { authStore } from "@/stores/authStore";
 
 export type CrudResponse = {

@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import crud from "@/plugins/crud";
 import { useState, useEffect } from "react";
@@ -9,6 +8,7 @@ import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
 import { authStore } from "@/stores/authStore";
 import toast from "react-hot-toast";
+import { Rating } from "react-simple-star-rating";
 
 const cities = [
 	"Phagwara",
@@ -61,10 +61,10 @@ function Services() {
 							height="170"
 							src="https://www.youtube.com/embed/C9Ee82hF2l8?si=owIsyppQR3nZujgO"
 							title="YouTube video player"
-							frameborder="0"
+							frameBorder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							referrerpolicy="strict-origin-when-cross-origin"
-							allowfullscreen
+							referrerPolicy="strict-origin-when-cross-origin"
+							allowFullScreen
 						></iframe>
 					</div>
 					<p>
@@ -87,10 +87,10 @@ function Services() {
 							height="170"
 							src="https://www.youtube.com/embed/gheAwVmNx7k?si=fYXxo7EflOdhg7df"
 							title="YouTube video player"
-							frameborder="0"
+							frameBorder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							referrerpolicy="strict-origin-when-cross-origin"
-							allowfullscreen
+							referrerPolicy="strict-origin-when-cross-origin"
+							allowFullScreen
 						></iframe>
 					</div>
 					<p>
@@ -133,7 +133,7 @@ function LoginCard() {
 			// localStorage.setItem("token", res.data.token.key);
 			// localStorage.setItem("account", JSON.stringify(res.data.account));
 			authStore.getState().login(res.data.token.key, res.data.account);
-			router.push("/service");
+			toast.success("Login Successful");
 		} else {
 			toast.error("Something went wrong");
 		}
@@ -272,30 +272,190 @@ function LoginCard() {
 }
 
 function BookingCard() {
+	const [myService, setMyService] = useState(null);
+	const [paymentModal, setPaymentModal] = useState(false);
+
+	useEffect(() => {
+		refreshService();
+		const itv = setInterval(refreshService, 2000);
+		return () => clearInterval(itv);
+	}, []);
+
+	async function refreshService() {
+		const account = authStore.getState().account;
+		const res = await crud.get("/service/list", { user: account._id });
+		if (res.error) toast.error(res.msg);
+		else setMyService(res.data[0]);
+		console.log(res);
+	}
+
+	async function cancelBooking() {
+		const backup = JSON.parse(JSON.stringify(myService));
+		setMyService({
+			...myService,
+			mechanic: myService.mechanic,
+			user: myService.user,
+			status: "Cancelled",
+			rating: -1,
+		});
+		toast.success("Booking Cancelled");
+
+		const res = await crud.put("/service/" + myService._id, null, {
+			status: "Cancelled",
+			rating: -1,
+		});
+		if (res.error) {
+			toast.error(res.msg);
+			setMyService(backup);
+		} else {
+		}
+	}
+
+	async function reviewMechanic(rating) {
+		const backup = JSON.parse(JSON.stringify(myService));
+		setMyService({
+			...myService,
+			mechanic: myService.mechanic,
+			user: myService.user,
+			rating: rating,
+			reviewed: true,
+		});
+		toast.success("Rating Submitted");
+
+		const res = await crud.put("/service/" + myService._id, null, {
+			rating: rating,
+			reviewed: true,
+		});
+		if (res.error) {
+			toast.error(res.msg);
+			setMyService(backup);
+		} else {
+		}
+	}
+
+	async function pay() {
+		const backup = JSON.parse(JSON.stringify(myService));
+		setMyService({
+			...myService,
+			mechanic: myService.mechanic,
+			user: myService.user,
+			status: "Completed",
+		});
+		toast.success("Payment Completed");
+		setPaymentModal(false);
+
+		const res = await crud.put("/service/" + myService._id, null, {
+			status: "Completed",
+		});
+		if (res.error) {
+			toast.error(res.msg);
+			setMyService(backup);
+		} else {
+		}
+	}
+
 	return (
-		<div className="flex flex-col gap-4 bg-white p-8 rounded shadow-lg md:h-full my-2">
-			<div className="flex flex-col gap-1">
-				<h1>Booking Details</h1>
+		<div className="flex flex-col justify-between gap-4 bg-white p-8 rounded shadow-lg md:h-full my-2">
+			<div className="flex flex-col gap-1 w-full text-center font-semibold">
+				<h1>
+					My Booking{"  "}
+					<span className="px-2.5 py-1.5 ml-1 bg-primary rounded-2xl text-white">
+						{myService && myService.status}
+					</span>
+				</h1>
 			</div>
-			<div className="flex flex-col gap-1">
-				<h1>Mored details here</h1>
-				<h1>Mored details here</h1>
-				<h1>Mored details here</h1>
-				<h1>Mored details here</h1>
+			<div className="flex flex-col gap-1 text-sm">
+				<h1>
+					<span className="font-semibold">Mechanic:</span>{" "}
+					{myService && myService.mechanic.name}
+				</h1>
+				<h1>
+					<span className="font-semibold">Vehicle:</span>{" "}
+					{myService && myService.vehicle + " | " + myService.plate}
+				</h1>
+				<h1>
+					<span className="font-semibold">Details:</span>{" "}
+					{myService && myService.description}
+				</h1>
 			</div>
 
-			<button className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded">
-				Cancel Booking
-				{/* {!loading && "Cancel"} */}
-				{/* {loading && <Loading />} */}
-			</button>
+			<Modal isOpen={paymentModal}>
+				<div className="bg-white p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
+					<img src="qr.jpeg" alt="" />
+					<div className="flex flex-col md:flex-row gap-4 w-full p-4">
+						<button
+							className="w-full rounded px-4 py-2 bg-primary"
+							onClick={() => setPaymentModal(false)}
+						>
+							Cancel Payment
+						</button>
+						<button
+							className="w-full rounded px-4 py-2 bg-primary"
+							onClick={pay}
+						>
+							Complete Payment
+						</button>
+					</div>
+				</div>
+			</Modal>
 
-			<Link
-				href="/service"
-				className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-			>
-				New Booking
-			</Link>
+			{myService && myService.status == "Requested" && (
+				<div className="flex flex-col gap-1">
+					<button
+						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+						onClick={cancelBooking}
+					>
+						Cancel Booking
+					</button>
+					<a
+						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+						href={"tel:" + myService.mechanic.phone}
+					>
+						Call Mechanic
+					</a>
+				</div>
+			)}
+
+			{myService && myService.status == "Ongoing" && (
+				<div className="flex flex-col gap-1">
+					<a
+						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+						href={"tel:" + myService.mechanic.phone}
+					>
+						Call Mechanic
+					</a>
+					{myService.amount > 0 && (
+						<button
+							className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+							onClick={() => setPaymentModal(true)}
+						>
+							Pay {myService.amount}
+						</button>
+					)}
+				</div>
+			)}
+			{myService &&
+				myService.status != "Requested" &&
+				myService.status != "Ongoing" && (
+					<div className="flex flex-col gap-1">
+						{myService.rating > -1 && (
+							<div className="flex justify-center items-center">
+								<Rating
+									SVGstyle={{ display: "inline-block" }}
+									onClick={reviewMechanic}
+									initialValue={myService.rating}
+									readonly={myService.reviewed}
+								/>
+							</div>
+						)}
+						<Link
+							href="/service"
+							className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+						>
+							New Booking
+						</Link>
+					</div>
+				)}
 		</div>
 	);
 }
