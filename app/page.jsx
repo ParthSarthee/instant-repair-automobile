@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { authStore } from "@/stores/authStore";
 import toast from "react-hot-toast";
 import { Rating } from "react-simple-star-rating";
+import { Input } from "@material-tailwind/react";
 
 const cities = [
 	"Phagwara",
