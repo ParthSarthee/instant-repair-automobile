@@ -11,7 +11,9 @@ import toast from "react-hot-toast";
 import { Rating } from "react-simple-star-rating";
 import { Input, Button, Select, Option } from "@material-tailwind/react";
 import Slider from "react-slick";
-import Plyr from "plyr-react";
+// import Plyr from "plyr-react";
+import dynamic from "next/dynamic";
+const Plyr = dynamic(() => import("plyr-react"), { ssr: false });
 import "plyr-react/plyr.css";
 import Script from "next/script";
 
@@ -238,7 +240,7 @@ function LoginCard() {
 
 						<Button
 							href="/service"
-							className="mt-4 bg-primary w-full hover:bg-orange-500"
+							className="mt-4 bg-primary w-full hover:bg-primary-light"
 							size="md"
 							onClick={login}
 							loading={loading}
@@ -280,7 +282,7 @@ function LoginCard() {
 
 					<Button
 						size="md"
-						className="bg-primary hover:bg-orange-500"
+						className="bg-primary hover:bg-primary-light"
 						onClick={login}
 						loading={loading}
 					>
@@ -291,7 +293,7 @@ function LoginCard() {
 					<p>Explore Our Services</p>
 					<Link href="/service" className="mt-4 w-full">
 						<Button
-							className="bg-white text-primary ring-1 ring-primary hover:bg-primary hover:text-white"
+							className="bg-white text-primary hover:bg-gray-800 hover:text-white"
 							// variant="outlined"
 							// color="orange"
 							size="md"
@@ -310,6 +312,11 @@ function BookingCard() {
 	const [myService, setMyService] = useState(null);
 	const [paymentModal, setPaymentModal] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [rating, setRating] = useState(0);
+	const [review, setReview] = useState("");
+	const [ratingModal, setRatingModal] = useState(false);
+
+	const account = authStore((state) => state.account);
 
 	useEffect(() => {
 		refreshService();
@@ -323,7 +330,14 @@ function BookingCard() {
 		if (res.error) toast.error(res.msg);
 		else setMyService(res.data[0]);
 		setLoading(false);
-		console.log(res);
+		if (
+			res.data &&
+			res.data.length > 0 &&
+			res.data[0].status == "Completed" &&
+			!res.data[0].reviewed
+		) {
+			setRatingModal(true);
+		}
 	}
 
 	async function cancelBooking() {
@@ -348,19 +362,26 @@ function BookingCard() {
 		}
 	}
 
-	async function reviewMechanic(rating) {
+	async function reviewMechanic() {
+		if (rating < 1 || !review) {
+			toast.error("Please provide rating and review");
+			return;
+		}
+
 		const backup = JSON.parse(JSON.stringify(myService));
 		setMyService({
 			...myService,
 			mechanic: myService.mechanic,
 			user: myService.user,
 			rating: rating,
+			review: review,
 			reviewed: true,
 		});
 		toast.success("Rating Submitted");
-
+		setRatingModal(false);
 		const res = await crud.put("/service/" + myService._id, null, {
 			rating: rating,
+			review: review,
 			reviewed: true,
 		});
 		if (res.error) {
@@ -395,10 +416,16 @@ function BookingCard() {
 	else if (!myService)
 		return (
 			<div className="flex flex-col justify-center items-center gap-4 bg-white p-8 ring-1 ring-primary rounded-lg shadow-lg md:h-full my-2">
-				<h1 className="h1-orange">No Bookings Found</h1>
-				<Link href="/service">
-					<Button color="green">Create First Booking</Button>
-				</Link>
+				<h1 className="h1-orange">Hello, {account.name}</h1>
+				{account && account.type == "user" ? (
+					<Link href="/service">
+						<Button color="green">Create Your First Booking</Button>
+					</Link>
+				) : (
+					<Link href="/mechanic">
+						<Button color="green">Go To Your Dashboard</Button>
+					</Link>
+				)}
 			</div>
 		);
 
@@ -445,6 +472,30 @@ function BookingCard() {
 				</div>
 			</Modal>
 
+			<Modal isOpen={ratingModal}>
+				<div className="bg-white rounded-lg ring-1 ring-primary p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
+					<div className="flex flex-col justify-center items-center gap-4 w-full p-4">
+						<h1 className="h1-orange text-2xl w-full text-center">
+							Rate & Review
+						</h1>
+						<Rating
+							SVGstyle={{ display: "inline-block" }}
+							onClick={(e) => setRating(e)}
+							value={rating}
+						/>
+						<Input
+							placeholder="Review"
+							label="Review"
+							value={review}
+							onChange={(e) => setReview(e.target.value)}
+						/>
+						<Button className="w-full" color="green" onClick={reviewMechanic}>
+							Submit Review
+						</Button>
+					</div>
+				</div>
+			</Modal>
+
 			{myService && myService.status == "Requested" && (
 				<div className="flex flex-col gap-1">
 					<Button className="mt-4" color="red" onClick={cancelBooking}>
@@ -476,15 +527,24 @@ function BookingCard() {
 				myService.status != "Requested" &&
 				myService.status != "Ongoing" && (
 					<div className="flex flex-col gap-1">
-						{myService.rating > -1 && (
+						{myService.rating > 0 && (
 							<div className="flex justify-center items-center">
 								<Rating
 									SVGstyle={{ display: "inline-block" }}
-									onClick={reviewMechanic}
+									// onClick={reviewMechanic}
 									initialValue={myService.rating}
-									readonly={myService.reviewed}
+									readonly={true}
 								/>
 							</div>
+						)}
+						{myService.rating == 0 && (
+							<Button
+								color="blue"
+								className="w-full"
+								onClick={() => setRatingModal(true)}
+							>
+								Rate This Service
+							</Button>
 						)}
 						<Link href="/service" className="mt-4 w-full">
 							<Button color="green" className="w-full">

@@ -6,9 +6,8 @@ h1 {
 	position: relative; /* Required for pseudo-element positioning */
 	overflow: hidden; /* Clip overflowing content */
 	padding: 8px;
-	/* @apply text-white; */
-	color: #ffffff;
-	/* color: #ff7f27; */
+	/* color: #ffffff; */
+	color: #ff7f27;
 }
 
 h1:after {
@@ -18,7 +17,8 @@ h1:after {
 	left: 0;
 	width: 100%; /* Match text width */
 	height: 2px; /* Line thickness */
-	background-color: #ffffff; /* Underline color */
+	/* background-color: #ffffff; */
+	background-color: #ff7f27;
 	transition: clip-path 0.3s ease-in-out; /* Smooth transition */
 	clip-path: inset(0 100% 0 0); /* Initially clips the entire line */
 }
@@ -52,8 +52,8 @@ h1:hover:after {
 }
 
 .area {
-	background: #dd6438;
-	background: -webkit-linear-gradient(to left, #dc8e71, #dd6438);
+	background: #ff7f27;
+	background: -webkit-linear-gradient(to left, #ffac74, #ff7f27);
 	/* background: #4e54c8;
 	background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8); */
 	/* width: 100%; */

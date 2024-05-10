@@ -26,8 +26,8 @@ export default function RootLayout({ children }) {
           href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
         />
       </head>
-      <body className="mt-20">
-        <div className="area h-screen w-full fixed top-0 -z-10">
+      <body className="mt-20 bg-neutral-100">
+        {/* <div className="area h-screen w-full fixed top-0 -z-10">
           <ul class="circles">
             <li></li>
             <li></li>
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
             <li></li>
             <li></li>
           </ul>
-        </div>
+        </div> */}
         <Navbar />
         <Toaster />
         {children}

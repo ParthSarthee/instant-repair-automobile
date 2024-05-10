@@ -24,14 +24,14 @@ function Navbar() {
 				<DropdownMenu />
 				{account ? (
 					<Button
-						className="bg-primary text-black hover:bg-orange-500"
+						className="bg-primary text-black hover:bg-primary-light hover:text-white"
 						onClick={logout}
 					>
 						Logout
 					</Button>
 				) : (
 					<Link href="/">
-						<Button className="bg-primary text-black hover:bg-orange-500">
+						<Button className="bg-primary text-black hover:bg-primary-light hover:text-white">
 							Login
 						</Button>
 					</Link>
@@ -48,7 +48,7 @@ function DropdownMenu() {
 	return (
 		<div>
 			<Button
-				className=" bg-primary text-black flex items-center hover:bg-orange-500"
+				className=" bg-primary text-black flex items-center hover:bg-primary-light hover:text-white"
 				onClick={toggleDropdown}
 			>
 				More{" "}
@@ -81,28 +81,28 @@ function DropdownMenu() {
 					aria-labelledby="dropdownDefaultButton"
 				>
 					<li>
-						<a
-							href="#"
+						<Link
+							href="/about"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Option One
-						</a>
+							About
+						</Link>
 					</li>
 					<li>
-						<a
-							href="#"
+						<Link
+							href="/about#faq"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Option Two
-						</a>
+							FAQs
+						</Link>
 					</li>
 					<li>
-						<a
-							href="#"
+						<Link
+							href="/about#review"
 							className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
-							Option Three
-						</a>
+							Review
+						</Link>
 					</li>
 				</ul>
 			</div>

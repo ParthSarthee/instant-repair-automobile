@@ -250,6 +250,18 @@ function ServiceForm({ serviceData, setServiceData }) {
 						value={serviceData.plate}
 					/>
 				</div>
+				{serviceData.service && serviceData.service == "doorstep" && (
+					<div className="flex flex-col gap-1">
+						<Input
+							type="datetime-local"
+							placeholder="Booking Time Slot"
+							label="Booking Time Slot"
+							onChange={(e) =>
+								setServiceData({ ...serviceData, slot: e.target.value })
+							}
+						/>
+					</div>
+				)}
 				<div className="flex flex-col gap-1">
 					<Textarea
 						// placeholder="Describe The Problem"
@@ -261,7 +273,7 @@ function ServiceForm({ serviceData, setServiceData }) {
 					/>
 				</div>
 				<Button
-					className="bg-primary hover:bg-orange-500 text-white w-full"
+					className="bg-primary hover:bg-primary-light text-white w-full"
 					onClick={() =>
 						document
 							.getElementById("list")
