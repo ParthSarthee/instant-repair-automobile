@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { authStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
+import { Button } from "@material-tailwind/react";
 
 function Navbar() {
 	const account = authStore((state) => state.account);
@@ -17,23 +18,22 @@ function Navbar() {
 		<div className="flex justify-between px-8 py-2 items-center bg-neutral-900 fixed top-0 w-full z-50">
 			<Link href="/" className="flex justify-center items-center gap-2">
 				<img src="/logo.png" width="50" height="16" className="rounded" />
-				<h1 className="text-primary text-4xl">IRA</h1>
+				<h1 className="text-primary h1-orange text-4xl">IRA</h1>
 			</Link>
 			<div className="flex gap-2">
 				<DropdownMenu />
 				{account ? (
-					<button
-						className="bg-primary text-black px-4 py-2 font-semibold rounded"
+					<Button
+						className="bg-primary text-black hover:bg-orange-500"
 						onClick={logout}
 					>
 						Logout
-					</button>
+					</Button>
 				) : (
-					<Link
-						href="/"
-						className="bg-primary text-black px-4 py-2 font-semibold rounded"
-					>
-						Login
+					<Link href="/">
+						<Button className="bg-primary text-black hover:bg-orange-500">
+							Login
+						</Button>
 					</Link>
 				)}
 			</div>
@@ -47,8 +47,8 @@ function DropdownMenu() {
 
 	return (
 		<div>
-			<button
-				className=" bg-primary text-black px-4 py-2 font-semibold rounded text-center inline-flex items-center "
+			<Button
+				className=" bg-primary text-black flex items-center hover:bg-orange-500"
 				onClick={toggleDropdown}
 			>
 				More{" "}
@@ -67,7 +67,7 @@ function DropdownMenu() {
 						d="m1 1 4 4 4-4"
 					/>
 				</svg>
-			</button>
+			</Button>
 			{/* Dropdown menu */}
 			<div
 				id="dropdown"

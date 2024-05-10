@@ -5,6 +5,13 @@ import { task } from "@/plugins/task";
 import toast from "react-hot-toast";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
+import {
+	Input,
+	Button,
+	Select,
+	Option,
+	Textarea,
+} from "@material-tailwind/react";
 
 const cities = [
 	"Phagwara",
@@ -186,7 +193,7 @@ function SCard({ title, children, skill, setSkill, zkey }) {
 	return (
 		<div
 			className={
-				"p-12 rounded shadow-lg flex flex-col justify-center items-center gap-2 text-primary " +
+				"p-12 rounded-lg shadow-lg flex flex-col justify-center items-center gap-2 text-primary cursor-pointer hover:scale-105 hover:ring-1 hover:ring-primary " +
 				extraClass
 			}
 			onClick={cardSelected}
@@ -205,32 +212,27 @@ function ServiceForm({ serviceData, setServiceData }) {
 		>
 			<h1 className="text-4xl font-semibold">Give More Details</h1>
 
-			<div className="flex flex-col gap-4 bg-white p-8 rounded shadow-lg w-full max-w-screen-lg ">
+			<div className="flex flex-col gap-6 bg-white p-8 rounded-lg pt-12 ring-1 ring-primary shadow-lg w-full max-w-screen-lg ">
 				<div className="flex flex-col gap-1">
-					<span>Your Location: </span>
-					<select
+					<Select
 						type="text"
-						placeholder="Select Your City"
-						className="ring-black ring-1 rounded px-4 py-2"
-						onChange={(e) =>
-							setServiceData({ ...serviceData, location: e.target.value })
-						}
+						placeholder="Your City"
+						label="Your City"
+						onChange={(e) => setServiceData({ ...serviceData, location: e })}
 						value={serviceData.location}
 					>
-						<option value=""> Select Your City</option>
 						{cities.map((city) => (
-							<option key={city} value={city}>
+							<Option key={city} value={city}>
 								{city}
-							</option>
+							</Option>
 						))}
-					</select>
+					</Select>
 				</div>
 				<div className="flex flex-col gap-1">
-					<span>Vehicle & Brand Model: </span>
-					<input
+					<Input
 						type="text"
-						placeholder="Enter Your Vehicle & Brand Model"
-						className="ring-black ring-1 rounded px-4 py-2"
+						placeholder="Vehicle Brand & Model"
+						label="Vehicle Brand & Model"
 						onChange={(e) =>
 							setServiceData({ ...serviceData, vehicle: e.target.value })
 						}
@@ -238,11 +240,10 @@ function ServiceForm({ serviceData, setServiceData }) {
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
-					<span>Vehicle Plate Number: </span>
-					<input
+					<Input
 						type="text"
-						placeholder="Enter Your Vehicle Plate Number"
-						className="ring-black ring-1 rounded px-4 py-2"
+						placeholder="Vehicle Plate Number"
+						label="Vehicle Plate Number"
 						onChange={(e) =>
 							setServiceData({ ...serviceData, plate: e.target.value })
 						}
@@ -250,26 +251,25 @@ function ServiceForm({ serviceData, setServiceData }) {
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
-					<span>Description: </span>
-					<textarea
-						placeholder="Enter About Problem"
-						className="ring-black ring-1 rounded px-4 py-2"
+					<Textarea
+						// placeholder="Describe The Problem"
+						label="Describe The Problem"
 						onChange={(e) =>
 							setServiceData({ ...serviceData, description: e.target.value })
 						}
 						value={serviceData.description}
 					/>
 				</div>
-				<button
-					className=" text-center mt-4 bg-primary text-white px-4 py-2 font-semibold rounded"
+				<Button
+					className="bg-primary hover:bg-orange-500 text-white w-full"
 					onClick={() =>
 						document
 							.getElementById("list")
 							.scrollIntoView({ behavior: "smooth" })
 					}
 				>
-					Next
-				</button>
+					Find Mechanic
+				</Button>
 			</div>
 		</div>
 	);
@@ -307,6 +307,7 @@ function MechanicList({ serviceData, setServiceData }) {
 							skill={mechanic.skill}
 							location={mechanic.location}
 							rating={mechanic.rating}
+							service={mechanic.service}
 							serviceData={serviceData}
 							setServiceData={setServiceData}
 						/>
@@ -322,6 +323,7 @@ function MechanicCard({
 	skill,
 	location,
 	rating,
+	service,
 	uid,
 	serviceData,
 	setServiceData,
@@ -362,20 +364,17 @@ function MechanicCard({
 	}
 
 	return (
-		<div className="bg-white p-4 rounded shadow-lg w-full max-w-5xl flex justify-between items-center">
+		<div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-5xl flex justify-between items-center hover:scale-105 hover:ring-1 hover:ring-primary">
 			<div className="flex flex-col">
 				<h2 className="text-xl font-semibold">{name}</h2>
-				<p className="text-sm">{skill}</p>
+				{/* <p className="text-sm">{skill}</p> */}
 				<p className="text-sm">{location}</p>
-				<p className="text-sm">Rating: {rating}</p>
+				<p className="text-sm">Rating: {(rating / service).toFixed(1)}</p>
 			</div>
 			<div>
-				<button
-					className="bg-primary text-white p-2 rounded w-[100px]"
-					onClick={createServiceRequest}
-				>
+				<Button color="green" onClick={createServiceRequest}>
 					Book
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

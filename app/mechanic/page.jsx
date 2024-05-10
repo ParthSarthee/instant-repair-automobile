@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Loading from "@/components/Loading";
 import { Rating } from "react-simple-star-rating";
 import Modal from "@/components/Modal";
+import { Input, Button } from "@material-tailwind/react";
 
 function MechanicsPage() {
 	const account = authStore((state) => state.account);
@@ -54,7 +55,7 @@ function MechanicsPage() {
 						{mechanic.amount} Earnings
 					</div>
 					<div className="p-4 bg-neutral-300 ring ring-primary rounded">
-						{mechanic.rating / mechanic.service} Ratings
+						{(mechanic.rating / mechanic.service).toFixed(1)} Ratings
 					</div>
 				</div>
 			</div>
@@ -142,40 +143,37 @@ function MechanicCard({ name, type, vehicle, serviceT }) {
 	}
 
 	return (
-		<div className="bg-white p-4 rounded shadow-lg w-full flex md:flex-row flex-col justify-between items-center gap-2">
+		<div className="bg-white p-4 rounded-lg shadow-lg w-full flex md:flex-row flex-col justify-between items-center gap-2 hover:scale-[102%] hover:ring-1 hover:ring-primary">
 			<Modal isOpen={paymentModal}>
 				{service.amount > 0 ? (
 					<div className="bg-white p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
 						<img src="qr.jpeg" alt="" />
 						<div className="flex flex-col md:flex-row gap-4 w-full p-4">
-							<button
-								className="w-full rounded px-4 py-2 bg-primary"
+							<Button
+								className="w-full"
+								color="red"
 								onClick={() => setPaymentModal(false)}
 							>
 								Cancel Payment
-							</button>
-							<button
-								className="w-full rounded px-4 py-2 bg-primary"
-								onClick={pay}
-							>
+							</Button>
+							<Button className="w-full" color="green" onClick={pay}>
 								Accept Payment
-							</button>
+							</Button>
 						</div>
 					</div>
 				) : (
-					<div className="bg-white p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
-						<input
+					<div className="bg-white rounded-lg p-8 flex flex-col justify-center items-center gap-4 mx-4 md:m-auto m-2">
+						<h1>How much would you like to charge?</h1>
+						<Input
+							placeholder="Amount"
+							label="Amount"
 							type="number"
-							className="ring-black ring-1 rounded px-4 py-2"
 							value={amount}
 							onChange={(e) => setAmount(e.target.value)}
 						/>
-						<button
-							className="w-full rounded px-4 py-2 bg-primary"
-							onClick={updateAmount}
-						>
-							Reqest Payment
-						</button>
+						<Button className="w-full" color="green" onClick={updateAmount}>
+							Request Payment
+						</Button>
 					</div>
 				)}
 			</Modal>
@@ -195,42 +193,44 @@ function MechanicCard({ name, type, vehicle, serviceT }) {
 				<p className="text-sm">Problem: {service.description}</p>
 			</div>
 			{service.status == "Requested" && (
-				<div className="flex w-full md:w-auto">
-					<button
-						className="bg-primary text-white p-2 rounded w-full md:w-[100px] m-2"
+				<div className="flex gap-2 w-full md:w-auto">
+					<Button
+						className="w-full"
+						color="green"
 						onClick={() => updateBooking("Ongoing")}
 					>
 						Accept
-					</button>
-					<button
-						className="bg-primary text-white p-2 rounded w-full md:w-[100px] m-2"
+					</Button>
+					<Button
+						className="w-full"
+						color="red"
 						onClick={() => updateBooking("Rejected")}
 					>
 						Reject
-					</button>
+					</Button>
 				</div>
 			)}
 
 			{service.status == "Ongoing" && (
-				<div className="flex w-full md:w-auto">
-					<a
-						className="bg-primary text-center text-white p-2 rounded w-full md:w-[100px] m-2"
-						href={"tel:" + service.user.phone}
-					>
-						Call
+				<div className="flex gap-2 w-full md:w-auto">
+					<a className="w-full" href={"tel:" + service.user.phone}>
+						<Button className="w-full" color="green">
+							Call
+						</Button>
 					</a>
-					<button
-						className="bg-primary text-white p-2 rounded w-full md:w-[100px] m-2"
+					<Button
+						className="w-full"
+						color="blue"
 						onClick={() => setPaymentModal(true)}
 					>
 						Payment
-					</button>
+					</Button>
 				</div>
 			)}
 
 			{service.status != "Requested" && service.status != "Ongoing" && (
 				<div className="flex flex-col justify-center items-center gap-1 w-full md:w-auto">
-					<h1 className="text-lg font-semibold">Amount: {service.amount}</h1>
+					<h2 className="text-lg font-semibold">Amount: {service.amount}</h2>
 					<div className="">
 						<Rating
 							readonly={true}

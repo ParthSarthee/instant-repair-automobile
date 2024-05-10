@@ -9,7 +9,11 @@ import { useRouter } from "next/navigation";
 import { authStore } from "@/stores/authStore";
 import toast from "react-hot-toast";
 import { Rating } from "react-simple-star-rating";
-import { Input } from "@material-tailwind/react";
+import { Input, Button, Select, Option } from "@material-tailwind/react";
+import Slider from "react-slick";
+import Plyr from "plyr-react";
+import "plyr-react/plyr.css";
+import Script from "next/script";
 
 const cities = [
 	"Phagwara",
@@ -20,6 +24,15 @@ const cities = [
 	"Chandigarh",
 	"Patna",
 ];
+
+const settings = {
+	dots: true,
+	infinite: true,
+	speed: 500,
+	autoplay: true,
+	slidesToShow: 1,
+	slidesToScroll: 1,
+};
 
 export default function Home() {
 	return (
@@ -34,9 +47,13 @@ function Hero() {
 	const account = authStore((state) => state.account);
 
 	return (
-		<div className="flex flex-col md:flex-row justify-center items-center md:items-stretch p-8 gap-8">
+		<div className="flex flex-col md:flex-row justify-center items-center md:items-stretch p-8 gap-8 mt-32">
 			<div className="w-full md:w-2/3 max-h-[500px] lg:max-w-[700px]">
-				<img src="/hero.jpg" className="" />
+				<Slider {...settings}>
+					<img className="rounded-lg" src="/s1.jpg" alt="" />
+					<img className="rounded-lg" src="/s2.jpg" alt="" />
+					<img className="rounded-lg" src="/s3.jpg" alt="" />
+				</Slider>
 			</div>
 
 			<div className="md:w-1/3 w-full flex flex-col gap-4 ">
@@ -48,27 +65,16 @@ function Hero() {
 
 function Services() {
 	return (
-		<>
-			<h1 className="font-semibold text-center text-5xl mt-12">Our Services</h1>
-			<div className="flex md:flex-row flex-col justify-center items-center gap-8 md:gap-[5%] mt-12">
-				<div className="flex flex-col bg-white rounded justify-center items-center max-w-[400px] p-8 shadow-lg gap-4">
-					<h1 className="text-3xl font-semibold text-primary">
+		<div className="flex flex-col justify-center items-center mt-10 gap-8">
+			<h1 className="font-semibold text-center text-5xl mt-20 mb-8 p-2 ">
+				Our Services
+			</h1>
+			<div className="flex bg-white ring-1 ring-primary justify-center items-center p-10 shadow-lg md:gap-20 gap-6 max-w-screen-lg rounded-lg hover:scale-[102%] hover:ring cursor-pointer hover:shadow-2xl mx-8 md:flex-row flex-col-reverse">
+				<div className="flex flex-col gap-2 md:w-1/2 w-full">
+					<h1 className=" h1-orange text-3xl text-center md:text-left font-semibold text-primary">
 						Instant Service
 					</h1>
-					{/* <img src="/card1.jpg"  /> */}
-					<div className="">
-						<iframe
-							width="320"
-							height="170"
-							src="https://www.youtube.com/embed/C9Ee82hF2l8?si=owIsyppQR3nZujgO"
-							title="YouTube video player"
-							frameBorder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							referrerPolicy="strict-origin-when-cross-origin"
-							allowFullScreen
-						></iframe>
-					</div>
-					<p>
+					<p className="font-extralight text-neutral-800">
 						Instant Repair Service offers quick and reliable assistance for
 						sudden mechanical issues with cars. Available 24/7, it connects
 						customers with skilled technicians who can provide on-the-spot
@@ -77,24 +83,42 @@ function Services() {
 						the road quickly and with minimal hassle.
 					</p>
 				</div>
+				<div className="w-full md:w-1/2 rounded-lg border border-white bg-white p-[2px]">
+					<Plyr
+						id="player"
+						source={{
+							type: "video",
+							sources: [
+								{
+									src: "944812630",
+									provider: "vimeo",
+								},
+							],
+						}}
+					/>
+				</div>
+			</div>
 
-				<div className="flex flex-col bg-white rounded justify-center items-center max-w-[400px] p-8 shadow-lg gap-4">
-					<h1 className="text-3xl font-semibold text-primary">
+			<div className="flex bg-white ring-1 ring-primary justify-center items-center p-10 shadow-lg md:gap-20 gap-6 max-w-screen-lg rounded-lg hover:scale-[102%] hover:ring cursor-pointer hover:shadow-2xl mx-8 md:flex-row flex-col">
+				<div className="w-full md:w-1/2 rounded-lg border border-black bg-black p-[2px]">
+					<Plyr
+						id="player"
+						source={{
+							type: "video",
+							sources: [
+								{
+									src: "944812630", //"944822442",
+									provider: "vimeo",
+								},
+							],
+						}}
+					/>
+				</div>
+				<div className="flex flex-col gap-2 md:w-1/2 w-full">
+					<h1 className="text-3xl h1-orange text-center md:text-left font-semibold text-primary">
 						Doorstep Service
 					</h1>
-					<div>
-						<iframe
-							width="320"
-							height="170"
-							src="https://www.youtube.com/embed/gheAwVmNx7k?si=fYXxo7EflOdhg7df"
-							title="YouTube video player"
-							frameBorder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							referrerPolicy="strict-origin-when-cross-origin"
-							allowFullScreen
-						></iframe>
-					</div>
-					<p>
+					<p className="font-extralight text-neutral-800">
 						Doorstep Service allows customers to schedule a mechanic visit at a
 						time and location of their choosing. Offering flexibility, the
 						service brings certified mechanics to the customer's home or
@@ -104,7 +128,7 @@ function Services() {
 					</p>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
@@ -129,6 +153,7 @@ function LoginCard() {
 		if (res && res.error) {
 			toast.error(res.msg);
 		} else if (res && res.data && res.data.incomplete) {
+			toast("Please complete your profile to continue");
 			setShowModal(true);
 		} else if (res && res.data && res.data.token) {
 			// localStorage.setItem("token", res.data.token.key);
@@ -146,125 +171,134 @@ function LoginCard() {
 	return (
 		<>
 			<Modal isOpen={showModal}>
-				<div className="bg-neutral-100">
-					<div className="flex flex-col gap-4 bg-white p-8 rounded shadow-lg">
-						<div className="flex flex-col gap-1">
-							<span>Name: </span>
-							<input
+				<div className="w-full max-w-sm m-4">
+					<div className="flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg justify-center items-center w-full ring-1 ring-primary">
+						<h1 className="text-2xl font-semibold text-primary h1-orange text-center mb-4">
+							Signup Form
+						</h1>
+						<div className="flex flex-col gap-1 w-full">
+							<Input
 								type="text"
 								onChange={(e) =>
 									setUserData({ ...userData, name: e.target.value })
 								}
 								value={userData.name}
-								placeholder="Enter Your Name"
-								className="ring-black ring-1 rounded px-4 py-2"
+								placeholder="Your Name"
+								label="Your Name"
+								size="lg"
 							/>
 						</div>
 
-						<div>
-							<span>Type: </span> <br />
-							<select
-								onChange={(e) =>
-									setUserData({ ...userData, type: e.target.value })
-								}
+						<div className="w-full">
+							<Select
+								onChange={(e) => setUserData({ ...userData, type: e })}
 								value={userData.type}
-								className="ring-black ring-1 rounded px-4 py-2 w-full"
+								className="w-full"
+								label="Account Type"
+								size="md"
 							>
-								<option value="user">User</option>
-								<option value="mechanic">Mechanic</option>
-							</select>
+								<Option value="user">User</Option>
+								<Option value="mechanic">Mechanic</Option>
+							</Select>
 						</div>
 
 						{userData.type == "mechanic" && (
 							<>
-								<div>
-									<span>Skill: </span> <br />
-									<select
-										onChange={(e) =>
-											setUserData({ ...userData, skill: e.target.value })
-										}
+								<div className="w-full">
+									<Select
+										onChange={(e) => setUserData({ ...userData, skill: e })}
 										value={userData.skill}
-										className="ring-black ring-1 rounded px-4 py-2 w-full"
+										className="w-full"
+										label="Your Skill"
+										size="md"
 									>
-										<option value="two">Two Wheelers</option>
-										<option value="three">Three Wheelers</option>
-										<option value="four">Four Wheelers</option>
-										<option value="heavy">Heavy Vehicles</option>
-									</select>
+										<Option value="two">Two Wheelers</Option>
+										<Option value="three">Three Wheelers</Option>
+										<Option value="four">Four Wheelers</Option>
+										<Option value="heavy">Heavy Vehicles</Option>
+									</Select>
 								</div>
-								<div>
-									<span>Location: </span> <br />
-									<select
-										onChange={(e) =>
-											setUserData({ ...userData, location: e.target.value })
-										}
+								<div className="w-full">
+									<Select
+										onChange={(e) => setUserData({ ...userData, location: e })}
 										value={userData.location}
-										className="ring-black ring-1 rounded px-4 py-2 w-full"
+										className="w-full"
+										label="Your Location"
+										size="md"
 									>
 										{cities.map((city) => (
-											<option key={city} value={city}>
+											<Option key={city} value={city}>
 												{city}
-											</option>
+											</Option>
 										))}
-									</select>
+									</Select>
 								</div>
 							</>
 						)}
 
-						<button
+						<Button
 							href="/service"
-							className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+							className="mt-4 bg-primary w-full hover:bg-orange-500"
+							size="md"
 							onClick={login}
+							loading={loading}
 						>
-							{!loading && "Signup"}
-							{loading && <Loading />}
-						</button>
+							Signup
+						</Button>
 					</div>
 				</div>
 			</Modal>
 			<div className="md:h-full flex flex-col justify-between gap-4 my-2">
-				<div className="flex flex-col gap-4 bg-white p-8 rounded shadow-lg">
+				<div className="flex flex-col gap-4 bg-white p-8 rounded-lg ring-1 ring-primary shadow-lg">
+					<h1 className="text-3xl h1-orange font-semibold text-primary text-center mb-4">
+						Login or Signup
+					</h1>
 					<div className="flex flex-col gap-1">
-						<span>Phone: </span>
-						<input
-							type="text"
+						<Input
+							type="tel"
+							placeholder=" Phone Number"
+							label=" Phone Number"
+							size="lg"
+							value={userData.phone}
 							onChange={(e) =>
 								setUserData({ ...userData, phone: e.target.value })
 							}
-							value={userData.phone}
-							placeholder="Enter Your Phone"
-							className="ring-black ring-1 rounded px-4 py-2"
 						/>
 					</div>
-					<div className="flex flex-col gap-1">
-						<span>Password: </span>
-						<input
+					<div className="flex flex-col gap-1 mt-1 mb-4">
+						<Input
 							type="password"
+							value={userData.pass}
 							onChange={(e) =>
 								setUserData({ ...userData, pass: e.target.value })
 							}
-							value={userData.pass}
-							placeholder="Enter A Password"
-							className="ring-black ring-1 rounded px-4 py-2"
+							placeholder="Your Password"
+							label="Your Password"
+							size="lg"
 						/>
 					</div>
 
-					<button
-						href="/service"
-						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
+					<Button
+						size="md"
+						className="bg-primary hover:bg-orange-500"
 						onClick={login}
+						loading={loading}
 					>
-						{!loading && "Login"}
-						{loading && <Loading />}
-					</button>
+						Login / Singup
+					</Button>
 				</div>
 				<div className="flex justify-center items-center flex-col">
 					<p>Explore Our Services</p>
-					<Link
-						href="/service"
-						className="mt-4 bg-primary text-white text-center px-4 py-2 font-semibold rounded w-full"
-					>
-						Skip Login
+					<Link href="/service" className="mt-4 w-full">
+						<Button
+							className="bg-white text-primary ring-1 ring-primary hover:bg-primary hover:text-white"
+							// variant="outlined"
+							// color="orange"
+							size="md"
+							fullWidth
+						>
+							Skip Login
+						</Button>
 					</Link>
 				</div>
 			</div>
@@ -275,6 +309,7 @@ function LoginCard() {
 function BookingCard() {
 	const [myService, setMyService] = useState(null);
 	const [paymentModal, setPaymentModal] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		refreshService();
@@ -287,6 +322,7 @@ function BookingCard() {
 		const res = await crud.get("/service/list", { user: account._id });
 		if (res.error) toast.error(res.msg);
 		else setMyService(res.data[0]);
+		setLoading(false);
 		console.log(res);
 	}
 
@@ -355,10 +391,21 @@ function BookingCard() {
 		}
 	}
 
+	if (loading) return <Loading />;
+	else if (!myService)
+		return (
+			<div className="flex flex-col justify-center items-center gap-4 bg-white p-8 ring-1 ring-primary rounded-lg shadow-lg md:h-full my-2">
+				<h1 className="h1-orange">No Bookings Found</h1>
+				<Link href="/service">
+					<Button color="green">Create First Booking</Button>
+				</Link>
+			</div>
+		);
+
 	return (
-		<div className="flex flex-col justify-between gap-4 bg-white p-8 rounded shadow-lg md:h-full my-2">
+		<div className="flex flex-col justify-between gap-4 bg-white p-8 ring-1 ring-primary rounded-lg shadow-lg md:h-full my-2">
 			<div className="flex flex-col gap-1 w-full text-center font-semibold">
-				<h1>
+				<h1 className="h1-orange">
 					My Booking{"  "}
 					<span className="px-2.5 py-1.5 ml-1 bg-primary rounded-2xl text-white">
 						{myService && myService.status}
@@ -366,72 +413,62 @@ function BookingCard() {
 				</h1>
 			</div>
 			<div className="flex flex-col gap-1 text-sm">
-				<h1>
+				<h2>
 					<span className="font-semibold">Mechanic:</span>{" "}
 					{myService && myService.mechanic.name}
-				</h1>
-				<h1>
+				</h2>
+				<h2>
 					<span className="font-semibold">Vehicle:</span>{" "}
 					{myService && myService.vehicle + " | " + myService.plate}
-				</h1>
-				<h1>
+				</h2>
+				<h2>
 					<span className="font-semibold">Details:</span>{" "}
 					{myService && myService.description}
-				</h1>
+				</h2>
 			</div>
 
 			<Modal isOpen={paymentModal}>
-				<div className="bg-white p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
+				<div className="bg-white rounded-lg ring-1 ring-primary p-4 flex flex-col justify-center items-center gap-8 mx-4 md:m-auto">
 					<img src="qr.jpeg" alt="" />
 					<div className="flex flex-col md:flex-row gap-4 w-full p-4">
-						<button
-							className="w-full rounded px-4 py-2 bg-primary"
+						<Button
+							className="w-full"
+							color="red"
 							onClick={() => setPaymentModal(false)}
 						>
 							Cancel Payment
-						</button>
-						<button
-							className="w-full rounded px-4 py-2 bg-primary"
-							onClick={pay}
-						>
+						</Button>
+						<Button className="w-full" color="green" onClick={pay}>
 							Complete Payment
-						</button>
+						</Button>
 					</div>
 				</div>
 			</Modal>
 
 			{myService && myService.status == "Requested" && (
 				<div className="flex flex-col gap-1">
-					<button
-						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-						onClick={cancelBooking}
-					>
+					<Button className="mt-4" color="red" onClick={cancelBooking}>
 						Cancel Booking
-					</button>
-					<a
-						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-						href={"tel:" + myService.mechanic.phone}
-					>
-						Call Mechanic
+					</Button>
+					<a className="mt-4 w-full" href={"tel:" + myService.mechanic.phone}>
+						<Button className="w-full" color="green">
+							Call Mechanic
+						</Button>
 					</a>
 				</div>
 			)}
 
 			{myService && myService.status == "Ongoing" && (
-				<div className="flex flex-col gap-1">
-					<a
-						className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-						href={"tel:" + myService.mechanic.phone}
-					>
-						Call Mechanic
+				<div className="flex flex-col gap-3">
+					<a className="mt-4 w-full" href={"tel:" + myService.mechanic.phone}>
+						<Button className="w-full" color="green">
+							Call Mechanic
+						</Button>
 					</a>
 					{myService.amount > 0 && (
-						<button
-							className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-							onClick={() => setPaymentModal(true)}
-						>
+						<Button color="blue" onClick={() => setPaymentModal(true)}>
 							Pay {myService.amount}
-						</button>
+						</Button>
 					)}
 				</div>
 			)}
@@ -449,14 +486,75 @@ function BookingCard() {
 								/>
 							</div>
 						)}
-						<Link
-							href="/service"
-							className="mt-4 bg-primary text-center text-white px-4 py-2 font-semibold rounded"
-						>
-							New Booking
+						<Link href="/service" className="mt-4 w-full">
+							<Button color="green" className="w-full">
+								New Booking
+							</Button>
 						</Link>
 					</div>
 				)}
 		</div>
+	);
+}
+
+function ServicesBackup() {
+	return (
+		<>
+			<h1 className="font-semibold text-center text-5xl mt-12">Our Services</h1>
+			<div className="flex md:flex-row flex-col justify-center items-center gap-8 md:gap-[5%] mt-12">
+				<div className="flex flex-col bg-white rounded justify-center items-center max-w-[400px] p-8 shadow-lg gap-4">
+					<h1 className="text-3xl font-semibold text-primary">
+						Instant Service
+					</h1>
+					{/* <img src="/card1.jpg"  /> */}
+					<div className="">
+						<iframe
+							width="320"
+							height="170"
+							src="https://www.youtube.com/embed/C9Ee82hF2l8?si=owIsyppQR3nZujgO"
+							title="YouTube video player"
+							frameBorder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerPolicy="strict-origin-when-cross-origin"
+							allowFullScreen
+						></iframe>
+					</div>
+					<p>
+						Instant Repair Service offers quick and reliable assistance for
+						sudden mechanical issues with cars. Available 24/7, it connects
+						customers with skilled technicians who can provide on-the-spot
+						repairs. The service includes transparent pricing and offers
+						recovery if needed. With this service, car owners can get back on
+						the road quickly and with minimal hassle.
+					</p>
+				</div>
+
+				<div className="flex flex-col bg-white rounded justify-center items-center max-w-[400px] p-8 shadow-lg gap-4">
+					<h1 className="text-3xl font-semibold text-primary">
+						Doorstep Service
+					</h1>
+					<div>
+						<iframe
+							width="320"
+							height="170"
+							src="https://www.youtube.com/embed/gheAwVmNx7k?si=fYXxo7EflOdhg7df"
+							title="YouTube video player"
+							frameBorder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerPolicy="strict-origin-when-cross-origin"
+							allowFullScreen
+						></iframe>
+					</div>
+					<p>
+						Doorstep Service allows customers to schedule a mechanic visit at a
+						time and location of their choosing. Offering flexibility, the
+						service brings certified mechanics to the customer's home or
+						workplace. Transparent pricing ensures customers know costs upfront.
+						Dedicated support helps with scheduling and updates for a
+						hassle-free experience.
+					</p>
+				</div>
+			</div>
+		</>
 	);
 }
