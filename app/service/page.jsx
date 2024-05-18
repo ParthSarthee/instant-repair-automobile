@@ -58,7 +58,7 @@ function ServiceSelect({ service, setService }) {
 			className="flex flex-col justify-center items-center p-8 gap-8 md:h-screen pt-32"
 			id="service"
 		>
-			<h1 className="text-4xl font-semibold">Select You Service</h1>
+			<h1 className="text-4xl font-semibold">Select Your Service</h1>
 			<div className="flex flex-wrap justify-center items-center gap-8">
 				<SCard
 					setSkill={setService}

@@ -144,6 +144,8 @@ function LoginCard() {
 
 	const [loading, setLoading] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [passModel, setPassModel] = useState(false);
+	const [passData, setPassData] = useState({});
 	const router = useRouter();
 
 	async function login(e) {
@@ -168,6 +170,22 @@ function LoginCard() {
 
 		setLoading(false);
 		return;
+	}
+
+	async function resetPass() {
+		if (!passData || !passData.phone || !passData.pass) {
+			toast.error("Please fill the details.");
+			return;
+		}
+		setLoading(true);
+		const res = await crud.post("/auth/reset", null, passData);
+		if (res && res.error) {
+			toast.error(res.msg);
+		} else {
+			toast.success("Password Updated Successfully");
+		}
+		setLoading(false);
+		setPassModel(false);
 	}
 
 	return (
@@ -250,6 +268,50 @@ function LoginCard() {
 					</div>
 				</div>
 			</Modal>
+			<Modal isOpen={passModel}>
+				<div className="w-full max-w-sm m-4">
+					<div className="flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg justify-center items-center w-full ring-1 ring-primary">
+						<h1 className="text-2xl font-semibold text-primary h1-orange text-center mb-4">
+							Account Recovery
+						</h1>
+						<div className="flex flex-col gap-1 w-full">
+							<Input
+								type="text"
+								onChange={(e) =>
+									setPassData({ ...passData, phone: e.target.value })
+								}
+								value={passData.phone}
+								placeholder="Your Phone"
+								label="Your Phone"
+								size="lg"
+							/>
+						</div>
+
+						<div className="w-full">
+							<Input
+								type="password"
+								onChange={(e) =>
+									setPassData({ ...passData, pass: e.target.value })
+								}
+								value={passData.pass}
+								placeholder="New Password"
+								label="New Password"
+								size="lg"
+							/>
+						</div>
+
+						<Button
+							href="/service"
+							className="mt-4 bg-primary w-full hover:bg-primary-light"
+							size="md"
+							onClick={resetPass}
+							loading={loading}
+						>
+							Reset Password
+						</Button>
+					</div>
+				</div>
+			</Modal>
 			<div className="md:h-full flex flex-col justify-between gap-4 my-2">
 				<div className="flex flex-col gap-4 bg-white p-8 rounded-lg ring-1 ring-primary shadow-lg">
 					<h1 className="text-3xl h1-orange font-semibold text-primary text-center mb-4">
@@ -286,8 +348,14 @@ function LoginCard() {
 						onClick={login}
 						loading={loading}
 					>
-						Login / Singup
+						Login / Signup
 					</Button>
+					<p
+						className="text-center text-primary hover:underline hover:cursor-pointer"
+						onClick={() => setPassModel(true)}
+					>
+						Forgot Password? Click Here.
+					</p>
 				</div>
 				<div className="flex justify-center items-center flex-col">
 					<p>Explore Our Services</p>
