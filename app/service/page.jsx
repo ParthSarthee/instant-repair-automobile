@@ -306,8 +306,9 @@ function MechanicList({ serviceData, setServiceData }) {
 
 	return (
 		<div className="pt-32" id="list">
-			<div className="flex flex-col justify-center items-center p-8 gap-8">
+			<div className="flex flex-col justify-center items-center md:p-8 gap-8">
 				<h1 className="text-4xl font-semibold">Choose A Mechanic</h1>
+				<Mapper serviceData={serviceData} />
 				<div className="flex flex-col justify-center items-center gap-4 p-8 w-full">
 					{loading && <Loading className="w-20 h-20" />}
 					{!loading && mechanics.length == 0 && <p>No Mechanics Found!</p>}
@@ -388,6 +389,20 @@ function MechanicCard({
 					Book
 				</Button>
 			</div>
+		</div>
+	);
+}
+
+function Mapper({ serviceData }) {
+	if (!serviceData.location) return null;
+
+	return (
+		<div className="p-8">
+			<img
+				className="rounded-lg shadow-lg w-full max-w-5xl flex justify-between items-center hover:scale-105 hover:ring-1 hover:ring-primary"
+				src={`/maps/${serviceData.location}.png`}
+				alt=""
+			/>
 		</div>
 	);
 }
